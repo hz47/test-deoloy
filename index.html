@@ -79,7 +79,7 @@
     // Function to fetch and display messages
     async function fetchMessages() {
       try {
-        const response = await fetch('http://vc0888kgsgsccwwk8cs00oww.91.92.116.177.sslip.io/');
+        const response = await fetch('https://test.oroz.space/');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -108,7 +108,7 @@
     // Function to send a new message
     async function sendMessage(message) {
       try {
-        const response = await fetch('http://vc0888kgsgsccwwk8cs00oww.91.92.116.177.sslip.io/', {
+        const response = await fetch('https://test.oroz.space/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
