@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hello World Messages</title>
+  <title>Hello World Chat</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -16,16 +16,28 @@
       padding: 10px;
       border: 1px solid #ddd;
       margin-bottom: 10px;
+      border-radius: 5px;
+    }
+    #messageInput {
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
-  <h1>Hello Milos Messages</h1>
-  <button id="fetchMessages">Fetch Messages</button>
+  <h1>Hello World Chat</h1>
+
+  <!-- Form for adding new messages -->
+  <div id="messageInput">
+    <input type="text" id="messageField" placeholder="Type your message here" />
+    <button id="sendMessage">Send Message</button>
+  </div>
+
+  <!-- Container for displaying messages -->
   <div id="messages"></div>
 
   <script>
-    document.getElementById('fetchMessages').addEventListener('click', async () => {
+    // Function to fetch and display messages
+    async function fetchMessages() {
       try {
         const response = await fetch('http://vc0888kgsgsccwwk8cs00oww.91.92.116.177.sslip.io/');
         if (!response.ok) {
@@ -48,7 +60,45 @@
         console.error('There was a problem with the fetch operation:', error);
         alert('Failed to fetch messages. Check the console for more details.');
       }
+    }
+
+    // Function to send a new message
+    async function sendMessage(message) {
+      try {
+        const response = await fetch('http://vc0888kgsgsccwwk8cs00oww.91.92.116.177.sslip.io/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ message })
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        console.log('Message sent:', data);
+
+        // Refresh the messages after sending a new one
+        fetchMessages();
+      } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+        alert('Failed to send message. Check the console for more details.');
+      }
+    }
+
+    // Event listener for the send message button
+    document.getElementById('sendMessage').addEventListener('click', () => {
+      const messageField = document.getElementById('messageField');
+      const message = messageField.value.trim();
+      if (message) {
+        sendMessage(message);
+        messageField.value = ''; // Clear the input field
+      }
     });
+
+    // Fetch messages when the page loads
+    fetchMessages();
   </script>
 </body>
 </html>
