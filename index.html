@@ -57,6 +57,18 @@
       border: 1px solid #ddd;
       margin-right: 10px;
     }
+    .feedback-container {
+      margin-top: 20px;
+    }
+    .feedback-list {
+      margin-top: 20px;
+    }
+    .feedback-item {
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 5px;
+    }
   </style>
 </head>
 <body>
@@ -71,10 +83,23 @@
     </div>
   </div>
 
-  <!-- Bootstrap JS and diependencies -->
+  <!-- Feedback section -->
+  <div class="feedback-container">
+    <h2>Submit Feedback</h2>
+    <input type="text" id="nameField" placeholder="Your Name" class="form-control" />
+    <input type="text" id="sourceField" placeholder="Feedback Source" class="form-control" style="margin-top: 10px;" />
+    <textarea id="feedbackMessageField" placeholder="Your Feedback" class="form-control" style="margin-top: 10px;"></textarea>
+    <button id="submitFeedback" class="btn btn-success" style="margin-top: 10px;">Submit Feedback</button>
+
+    <!-- Container for displaying feedback -->
+    <div class="feedback-list" id="feedbackList"></div>
+  </div>
+
+  <!-- Bootstrap JS and dependencies -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
   <script>
     // Function to fetch and display messages
     async function fetchMessages() {
@@ -130,6 +155,61 @@
       }
     }
 
+    // Function to fetch and display feedback
+    async function fetchFeedback() {
+      try {
+        const response = await fetch('https://api.oroz.space/api/feedback');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+
+        // Clear previous feedbacks
+        const feedbackList = document.getElementById('feedbackList');
+        feedbackList.innerHTML = '';
+
+        // Display the feedback
+        data.data.forEach(feedback => {
+          const feedbackElement = document.createElement('div');
+          feedbackElement.className = 'feedback-item';
+          feedbackElement.innerHTML = `
+            <strong>Name:</strong> ${feedback.name}<br>
+            <strong>Source:</strong> ${feedback.source}<br>
+            <strong>Message:</strong> ${feedback.message}
+          `;
+          feedbackList.appendChild(feedbackElement);
+        });
+      } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+        alert('Failed to fetch feedback. Check the console for more details.');
+      }
+    }
+
+    // Function to submit feedback
+    async function submitFeedback(name, message, source) {
+      try {
+        const response = await fetch('https://api.oroz.space/api/feedback', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ name, message, source })
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        console.log('Feedback submitted:', data);
+
+        // Refresh the feedback list after submission
+        fetchFeedback();
+      } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+        alert('Failed to submit feedback. Check the console for more details.');
+      }
+    }
+
     // Event listener for the send message button
     document.getElementById('sendMessage').addEventListener('click', () => {
       const messageField = document.getElementById('messageField');
@@ -152,8 +232,23 @@
       }
     });
 
-    // Fetch messages when the page loads
+    // Event listener for the submit feedback button
+    document.getElementById('submitFeedback').addEventListener('click', () => {
+      const name = document.getElementById('nameField').value.trim();
+      const message = document.getElementById('feedbackMessageField').value.trim();
+      const source = document.getElementById('sourceField').value.trim();
+
+      if (name && message && source) {
+        submitFeedback(name, message, source);
+        document.getElementById('nameField').value = ''; // Clear the input fields
+        document.getElementById('feedbackMessageField').value = '';
+        document.getElementById('sourceField').value = '';
+      }
+    });
+
+    // Fetch messages and feedback when the page loads
     fetchMessages();
+    fetchFeedback();
   </script>
 </body>
 </html>
