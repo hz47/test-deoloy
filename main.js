@@ -27,7 +27,7 @@
         .feedback-container .feedback-modal .alert-danger {
             color: red;
         }
-        .feedback-container .feedback-modal {
+        .modal-backdrop .modal{
             z-index: 2050; /* Bootstrap default z-index for modals */
         }
     `;
