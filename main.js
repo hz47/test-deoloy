@@ -27,17 +27,22 @@
         .feedback-container .feedback-modal .alert-danger {
             color: red;
         }
-        .modal-backdrop .modal{
-            z-index: 2050; /* Bootstrap default z-index for modals */
+        .modal-backdrop {
+            --bs-backdrop-zindex: 2050; /* Bootstrap default z-index for backdrop */
+            z-index: 2050; /* Custom z-index value */
         }
-    `;
-    document.head.appendChild(style);
+        .modal {
+            z-index: 2060; /* Ensure modal is above backdrop */
+        }
+        
+            `;
 
     // Load Bootstrap CSS
     const bootstrapCss = document.createElement('link');
     bootstrapCss.rel = 'stylesheet';
     bootstrapCss.href = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css';
     document.head.appendChild(bootstrapCss);
+    document.head.appendChild(style);
 
     // Load Bootstrap JS and then create the button and modal
     const script = document.createElement('script');
