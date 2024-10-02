@@ -30,8 +30,9 @@ function sendErrorToBackend(data) {
 function flushErrorBuffer() {
     if (errorBuffer.length > 0) {
         const dataToSend = {
-            "email": "milos@mail.com",
-             "comment": errorBuffer.splice(0, bufferLimit)
+             "name": "milos",
+            "message": errorBuffer.splice(0, bufferLimit)
+            "source": "error"
          };
         sendErrorToBackend(dataToSend);
     }
