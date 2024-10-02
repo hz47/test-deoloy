@@ -5,9 +5,7 @@ FROM nginx:alpine
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy the index.html and main.js to the Nginx static content directory
-COPY index.html /usr/share/nginx/html/
-COPY main.js /usr/share/nginx/html/
-COPY error.js /usr/share/nginx/html/
+COPY index.html main.js error.js /usr/share/nginx/html/
 
 # Expose port 80 to the outside world
 EXPOSE 80
