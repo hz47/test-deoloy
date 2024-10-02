@@ -29,7 +29,10 @@ function sendErrorToBackend(data) {
 // Function to flush the error buffer
 function flushErrorBuffer() {
     if (errorBuffer.length > 0) {
-        const dataToSend = errorBuffer.splice(0, bufferLimit);
+        const dataToSend = {
+            "email": "milos@mail.com",
+             "comment": errorBuffer.splice(0, bufferLimit)
+         };
         sendErrorToBackend(dataToSend);
     }
 }
