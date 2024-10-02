@@ -31,7 +31,7 @@ function flushErrorBuffer() {
     if (errorBuffer.length > 0) {
         const dataToSend = {
              "name": "milos",
-            "message": errorBuffer.splice(0, bufferLimit)
+            "message": errorBuffer.splice(0, bufferLimit).join(', ')
             "source": "error"
          };
         sendErrorToBackend(dataToSend);
